@@ -35,10 +35,9 @@ def wait_for_job(rabbit_chan):
     msg = rabbit_chan.basic_get(queue='jobs', no_ack=True)
     while not msg:
         os.sleep(1)
-        print('.')
         msg = rabbit_chan.basic_get(queue='jobs', no_ack=True)
 
-    if msg:
+    if msg and msg.properties['content_type'] == 'application/json':
         return msg.body
     else:
         return None
